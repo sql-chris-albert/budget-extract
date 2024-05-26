@@ -1,2 +1,3 @@
-PyPDF2
+tabula-py
+JPype1
 pandas

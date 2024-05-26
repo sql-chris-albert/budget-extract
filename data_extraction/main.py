@@ -21,19 +21,46 @@ def extract_tables_from_pages(pdf_path,page):
         return None
 
 if __name__ == "__main__":
-    start_page = 24  # Starting page number (1-indexed for tabula)
+    # Create file with headers
+    headers = ['Description', 'FY24Budget', 'FY25Budget', 'Change', 'ChangePercent']
+    df = pd.DataFrame(columns=headers)
+    csv_file_path = 'budget_data.csv'
+    df.to_csv(csv_file_path, index=False)
+
+    # Set page range
+    start_page = 19  # Starting page number (1-indexed for tabula)
     end_page = 24    # Ending page number (1-indexed for tabula)
 
-    # Extract tables from the specified range of pages
-    df = extract_tables_from_pages(pdf_path, start_page, end_page)
+    # Initialize an empty DataFrame
+    df = pd.DataFrame()
 
-    if df is not None:
-        # Print the DataFrame
-        print(df)
-        
-        # Save the DataFrame to a CSV file
-        csv_file_path = "budget_data_pages.csv"
-        df.to_csv(csv_file_path, index=False)
-        print(f"DataFrame saved to {csv_file_path}")
-    else:
-        print("No table found on the specified pages.")
+    for page in range(start_page, end_page + 1):
+        print(page)
+        # Extract tables from the specified range of pages
+        df = extract_tables_from_pages(pdf_path, page)
+        new_row = pd.DataFrame([df.columns], columns=df.columns)
+        df = pd.concat([new_row, df]).reset_index(drop=True)
+        # Remove last 6 rows if last page
+        if page == end_page:
+            df = df.iloc[:-6]
+
+        # Drop 2nd column
+        df.drop(df.columns[1], axis=1, inplace=True)
+        # Drop 3rd column
+        df.drop(df.columns[2], axis=1, inplace=True)
+        # Drop 4th column
+        df.drop(df.columns[3], axis=1, inplace=True)
+        # Remove space characters in the 2nd column
+        df.iloc[:, 1] = df.iloc[:, 1].astype(str).str.replace(' ', '')
+        # Remove space characters in the 3rd column
+        df.iloc[:, 2] = df.iloc[:, 2].astype(str).str.replace(' ', '')
+
+        if df is not None:
+            # Print the DataFrame
+            print(df)
+            
+            # Save the DataFrame to CSV
+            df.to_csv(csv_file_path, mode='a', index=False, header=False)
+            print(f"DataFrame saved to {csv_file_path}")
+        else:
+            print(f'No table found on page {page}')
