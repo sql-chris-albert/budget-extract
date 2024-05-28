@@ -1,7 +1,8 @@
 import streamlit as st
 import pandas as pd
+import os
 
-dir_data = '.\\data_refined\\'
+dir_data = dir_data = os.path.join('.', 'data_refined')
 
 # Function to load the CSV file
 @st.cache_data
@@ -50,7 +51,7 @@ def show_main():
 
     # File selection
     selected_file = st.selectbox("Select a dataset to view", list(csv_files.keys()))
-    file_path = dir_data + csv_files[selected_file]
+    file_path = os.path.join(dir_data, csv_files[selected_file])
     
     # Load the CSV data
     data = load_data(file_path)
