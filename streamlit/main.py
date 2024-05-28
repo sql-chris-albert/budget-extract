@@ -29,6 +29,17 @@ csv_files = {
     # 'Budget Data 3': 'budget_data_3.csv'
 }
 
+# Function to rearrange columns so that they appear in the specified order
+def rearrange_columns(df):
+    columns_order = [
+        'Description',
+        'FY24Budget_1', 'FY24Budget_2',
+        'FY25Budget_1', 'FY25Budget_2',
+        'Change_1', 'Change_2',
+        'ChangePercent_1', 'ChangePercent_2'
+    ]
+    return df[columns_order]
+
 # Streamlit app
 def main():
     st.title("Budget Data Comparison Viewer")
@@ -55,6 +66,9 @@ def main():
     else:
         st.error("Both datasets must contain a 'Description' column.")
         return
+
+    # Rearrange columns
+    joined_data = rearrange_columns(joined_data)
 
     # Search functionality
     search_query = st.text_input("Search")
