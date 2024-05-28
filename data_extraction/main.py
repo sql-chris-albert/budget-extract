@@ -2,7 +2,7 @@ import tabula
 import pandas as pd
 
 # Path to the PDF file
-pdf_path = '.\\data\\FY_2024_2025_Board_of_Education_Final_Budget.pdf'
+pdf_path = '.\\data\\FY_24-25_Board_of_Finance_Revised_Budget_6-4-24_Referendum.pdf'
 
 def extract_tables_from_pages(pdf_path,page):
     try:
@@ -28,8 +28,8 @@ if __name__ == "__main__":
     df.to_csv(csv_file_path, index=False)
 
     # Set page range
-    start_page = 19  # Starting page number (1-indexed for tabula)
-    end_page = 24    # Ending page number (1-indexed for tabula)
+    start_page = 93  # Starting page number (1-indexed for tabula)
+    end_page = 98    # Ending page number (1-indexed for tabula)
 
     # Initialize an empty DataFrame
     df = pd.DataFrame()
