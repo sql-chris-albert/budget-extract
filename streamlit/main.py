@@ -1,10 +1,7 @@
 import streamlit as st
 import pandas as pd
 
-# Set page layout to wide
-st.set_page_config(layout="wide")
-
-dir_data = './data_refined/'
+dir_data = '.\\data_refined\\'
 
 # Function to load the CSV file
 @st.cache_data
@@ -18,68 +15,41 @@ def filter_data(data, query):
         return data[data.apply(lambda row: row.astype(str).str.contains(query, case=False).any(), axis=1)]
     return data
 
-# Function to highlight columns from the second dataset
-def highlight_v2_cols(s):
-    return ['background-color: yellow' if '_2' in c else '' for c in s.index]
-
 # List of CSV files
 csv_files = {
-    'FY24-25 BOE Budget V1': 'FY24-25_BOE_V1.csv',
-    'FY24-25 BOE Budget V2': 'FY24-25_BOE_V2.csv',
-    # 'Budget Data 3': 'budget_data_3.csv'
+    'FY24-25 BOE 1st Budget': 'FY24-25_BOE_V1.csv',
+    'FY24-25 BOE 2nd Budget': 'FY24-25_BOE_V2.csv',
+    'FY24-25 BOE Budget Comparison': 'FY24-25_BOE_V1_V2_Comparison.csv'
 }
 
-# Function to rearrange columns so that they appear in the specified order
-def rearrange_columns(df):
-    columns_order = [
-        'Description',
-        'FY24Budget_1', 'FY24Budget_2',
-        'FY25Budget_1', 'FY25Budget_2',
-        'Change_1', 'Change_2',
-        'ChangePercent_1', 'ChangePercent_2'
-    ]
-    return df[columns_order]
+# About page content
+def show_about():
+    st.title("About")
+    st.markdown("""
+    This data is proudly provided to you by Chris Albert, a local Canton resident.
+    I worked on this in my spare time with no affiliation to anyone. I'm not here to take anyone's
+    side in the arguments at hand. I simply want to provide folks with a better set of tools
+    to understand the data our town provides.
+    """)
 
-# Streamlit app
-def main():
-    st.title("Budget Data Comparison Viewer")
+# Main app content
+def show_main():
+    st.title("Canton Info")
 
-    # File selection for Dataset 1
-    selected_file_1 = st.selectbox("Select the first CSV file", list(csv_files.keys()), key='file1')
-    file_path_1 = dir_data + csv_files[selected_file_1]
-    
-    # File selection for Dataset 2
-    selected_file_2 = st.selectbox("Select the second CSV file", list(csv_files.keys()), key='file2')
-    file_path_2 = dir_data + csv_files[selected_file_2]
+    # File selection
+    selected_file = st.selectbox("Select a dataset to view", list(csv_files.keys()))
+    file_path = dir_data + csv_files[selected_file]
     
     # Load the CSV data
-    data1 = load_data(file_path_1)
-    data2 = load_data(file_path_2)
+    data = load_data(file_path)
     
-    # Convert the Description column to lowercase for case-insensitive join
-    data1['Description'] = data1['Description'].str.lower()
-    data2['Description'] = data2['Description'].str.lower()
-
-    # Join the datasets on the "Description" column
-    if "Description" in data1.columns and "Description" in data2.columns:
-        joined_data = pd.merge(data1, data2, on="Description", suffixes=('_1', '_2'))
-    else:
-        st.error("Both datasets must contain a 'Description' column.")
-        return
-
-    # Rearrange columns
-    joined_data = rearrange_columns(joined_data)
-
     # Search functionality
     search_query = st.text_input("Search")
     
-    filtered_data = filter_data(joined_data, search_query)
+    filtered_data = filter_data(data, search_query)
     
-    # Apply highlighting to the dataframe
-    styled_data = filtered_data.style.apply(highlight_v2_cols, axis=1)
-    
-    # Display the styled dataframe with sortable and filterable columns
-    st.dataframe(styled_data, height=1000)
+    # Display the dataframe with sortable and filterable columns
+    st.dataframe(filtered_data, height=1000)
     
     # Allow the user to download the filtered data
     csv = filtered_data.to_csv(index=False)
@@ -89,6 +59,16 @@ def main():
         file_name='filtered_data.csv',
         mime='text/csv',
     )
+
+# Streamlit app
+def main():
+    st.sidebar.title("Navigation")
+    page = st.sidebar.selectbox("Select a page", ["Main", "About"])
+    
+    if page == "Main":
+        show_main()
+    elif page == "About":
+        show_about()
 
 if __name__ == "__main__":
     main()
