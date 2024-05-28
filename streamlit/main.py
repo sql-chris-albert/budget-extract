@@ -36,6 +36,15 @@ def show_about():
 def show_main():
     st.title("Canton Info")
 
+    # Help box
+    with st.expander("Help (How to use this site)"):
+        st.markdown("""
+        **How to use this app:**
+        - **Select a dataset**: Choose a dataset from the dropdown menu
+        - **Search**: Use the search box to filter data by entering keywords or phrases
+        - **Sort**: Click on the column headers to change how the data is sorted
+        """)
+
     # File selection
     selected_file = st.selectbox("Select a dataset to view", list(csv_files.keys()))
     file_path = dir_data + csv_files[selected_file]
