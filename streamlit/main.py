@@ -30,6 +30,9 @@ def show_about():
     I worked on this in my spare time with no affiliation to anyone. I'm not here to take anyone's
     side in the arguments at hand. I simply want to provide folks with a better set of tools
     to understand the data our town provides.
+                
+    Currently the only data I have ready is the BOE budget. More data and features coming as
+    time allows.
     """)
 
 # Main app content
