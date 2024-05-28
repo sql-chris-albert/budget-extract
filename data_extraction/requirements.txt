@@ -1,0 +1,4 @@
+tabula-py
+JPype1
+pandas
+streamlit
