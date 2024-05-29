@@ -18,9 +18,9 @@ def filter_data(data, query):
 
 # List of CSV files
 csv_files = {
+    'FY24-25 BOE Budget Comparison': 'FY24-25_BOE_V1_V2_Comparison.csv',
     'FY24-25 BOE 1st Budget': 'FY24-25_BOE_V1.csv',
-    'FY24-25 BOE 2nd Budget': 'FY24-25_BOE_V2.csv',
-    'FY24-25 BOE Budget Comparison': 'FY24-25_BOE_V1_V2_Comparison.csv'
+    'FY24-25 BOE 2nd Budget': 'FY24-25_BOE_V2.csv'
 }
 
 # About page content
